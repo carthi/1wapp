@@ -1,0 +1,22 @@
+extends layout
+
+block body
+
+    if user.firstName
+        h1 #{user.firstName}'s Info
+    else
+        h1 #{user.email}'s Info
+
+    .container
+      div
+        br
+        span First Name:
+        a#xe-firstName.editable(href='#', data-name='firstName', data-type='text', data-send='always', data-placement='right', data-title='Enter First Name', data-url='/user', data-emptytext='Click to add', data-value='#{user.firstName}') #{user.firstName}
+        br
+        span Last Name:
+        a#xe-lastName.editable(href='#', data-name='lastName', data-type='text', data-send='always', data-placement='right', data-title='Enter Last Name', data-url='/user', data-emptytext='Click to add', data-value='#{user.lastName}') #{user.lastName}
+        br
+        span Display Name:
+        a#xe-displayName.editable(href='#', data-name='displayName', data-type='text', data-send='always', data-placement='right', data-title='Enter Display Name', data-url='/user', data-emptytext='Click to add', data-value='#{user.displayName}') #{user.displayName}
+
+    a(href="/logout") Logout

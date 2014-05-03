@@ -1,0 +1,33 @@
+extends layout
+
+block body
+
+  table(width='100%', border='0', cellspacing='0', cellpadding='0')
+    tr
+      td
+          h4 Members SignUp
+          br
+          form(id="signup", method="POST", action="/signup")
+            lable(for='email') Email
+            span.Apple-tab-span(style='white-space: pre;')		
+            input#email(type='text', name='email')
+            br
+            lable(for='password') Password
+            span.Apple-tab-span(style='white-space: pre;')		
+            input#password(type='password', name='password')
+            br
+            input(type="submit", value="SignUp")
+
+      td
+          h4 Students Register here!
+          br
+          form(id="studSignup", method="POST", action="/studSignup")
+            lable(for='email') Email
+            span.Apple-tab-span(style='white-space: pre;')		
+            input#email(type='text', name='email')
+            br
+            lable(for='password') Password
+            span.Apple-tab-span(style='white-space: pre;')		
+            input#password(type='password', name='password')
+            br
+            input(type="submit", value="Register")

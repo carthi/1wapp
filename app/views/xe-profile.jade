@@ -1,0 +1,39 @@
+extends layout
+
+block body
+
+    if profileinfo.firstName
+        h1 #{profileinfo.firstName}'s Profile
+    else
+        h1 #{profileinfo.email}'s Profile
+    a(href="/logout") Logout
+
+    .container
+      div
+        br
+        span Date of Birth:
+        a#xe-dob.editable(href='#', data-name='dob', data-type='date', data-send='always', data-placement='right', data-title='Enter Date of Birth', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.dob}') #{profile.dob}
+        br
+        span Address1:
+        a#xe-address1.editable(href='#', data-name='address1', data-type='text', data-send='always', data-placement='right', data-title='Enter Address1', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.address1}') #{profile.address1}
+        br
+        span Address2:
+        a#xe-address2.editable(href='#', data-name='address2', data-type='text', data-send='always', data-placement='right', data-title='Enter Address2', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.address2}') #{profile.address2}
+        br
+        span City:
+        a#xe-city.editable(href='#', data-name='city', data-type='text', data-send='always', data-placement='right', data-title='Enter City', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.city}') #{profile.city}
+        br
+        span Phone:
+        a#xe-phone.editable(href='#', data-name='phone', data-type='text', data-send='always', data-placement='right', data-title='Enter Phone', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.phone}') #{profile.phone}
+        br
+        span Degree:
+        a#xe-degree.editable(href='#', data-name='degree', data-type='text', data-send='always', data-placement='right', data-title='Enter Degree', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.education.degree}') #{profile.education.degree}
+        br
+        span School:
+        a#xe-school.editable(href='#', data-name='school', data-type='text', data-send='always', data-placement='right', data-title='Enter School', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.education.school}') #{profile.education.school}
+        br
+        span Grades:
+        a#xe-grades.editable(href='#', data-name='grades_honours', data-type='text', data-send='always', data-placement='right', data-title='Enter Grade', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.grades_honours}') #{profile.grades_honours}
+        br
+        span Interests:
+        a#xe-interests.editable(href='#', data-name='interests_experience', data-type='text', data-send='always', data-placement='right', data-title='Enter Interests', data-url='/profile/#{profile.emailhash}', data-emptytext='Click to add', data-value='#{profile.interests_experience}') #{profile.interests_experience}

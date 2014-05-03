@@ -1,123 +1,87 @@
-var express = require('express')
-  , passport = require('passport')
-  , util = require('util')
-  , FacebookStrategy = require('passport-facebook').Strategy;
+/**
+ * Module dependencies of CityDr app
+ */
 
-var FACEBOOK_APP_ID = "188782721315258"
-var FACEBOOK_APP_SECRET = "c8f295ef1ae8d48d54ca06e5fdb6a2b7";
+var express = require('express'),
+  fs = require('fs'),
+  http = require('http'),
+  path = require('path'),
+  mongoose = require('mongoose'),
+  passport = require("passport"),
+  flash = require("connect-flash");
 
 
-// Passport session setup.
-//   To support persistent login sessions, Passport needs to be able to
-//   serialize users into and deserialize users out of the session.  Typically,
-//   this will be as simple as storing the user ID when serializing, and finding
-//   the user by ID when deserializing.  However, since this example does not
-//   have a database of user records, the complete Facebook profile is serialized
-//   and deserialized.
-passport.serializeUser(function(user, done) {
-  done(null, user);
+var env = process.env.NODE_ENV || 'development',
+  config = require('./config/config')[env];
+
+mongoose.connect(config.db);
+
+var models_dir = __dirname + '/app/models';
+fs.readdirSync(models_dir).forEach(function (file) {
+  if(file[0] === '.') return; 
+  require(models_dir+'/'+ file);
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-
-// Use the FacebookStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Facebook
-//   profile), and invoke a callback with a user object.
-passport.use(new FacebookStrategy({
-    clientID: FACEBOOK_APP_ID,
-    clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:8080/auth/facebook/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      
-      // To keep the example simple, the user's Facebook profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Facebook account with a user record in your database,
-      // and return that user instead.
-      return done(null, profile);
-    });
-  }
-));
-
-
-
+require('./config/passport')(passport, config)
 
 var app = express();
 
-// configure Express
-app.configure(function() {
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.set('port', process.env.PORT || 8080);
-  app.use(express.logger());
+app.configure(function () {
+  app.set('port', process.env.PORT || 5000);
+  app.set('views', __dirname + '/app/views');
+  app.set('view engine', 'jade');
+  app.set('project-name', config.projectName);
+  app.set('company-name', config.companyName);
+  app.set('system-email', config.systemEmail);
+  app.set('crypto-key', config.cryptoKey);
+
+
+
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.methodOverride());
   app.use(express.session({ secret: 'keyboard cat' }));
-  // Initialize Passport!  Also use passport.session() middleware, to support
-  // persistent login sessions (recommended).
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(express.methodOverride());
+  app.use(flash());
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(path.join(__dirname, 'public')));
+
+  //global locals
+  app.locals.projectName = app.get('project-name');
+  app.locals.copyrightYear = new Date().getFullYear();
+  app.locals.copyrightName = app.get('company-name');
+  app.locals.cacheBreaker = 'br34k-01';
+});
+
+app.configure('development', function () {
+  app.use(express.errorHandler());
+});
+
+app.use(function(err, req, res, next){
+  res.status(err.status || 500);
+  res.render('500', { error: err });
+});
+
+app.use(function(req, res, next){
+  res.status(404);
+  if (req.accepts('html')) {
+    res.render('404', { url: req.url });
+    return;
+  }
+  if (req.accepts('json')) {
+    res.send({ error: 'Not found' });
+    return;
+  }
+  res.type('txt').send('Not found');
 });
 
 
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+require('./config/routes')(app, passport);
+
+
+http.createServer(app).listen(app.get('port'), function () {
+    console.log("Express server listening on port " + app.get('port'));
 });
-
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
-});
-
-app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
-});
-
-// GET /auth/facebook
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Facebook authentication will involve
-//   redirecting the user to facebook.com.  After authorization, Facebook will
-//   redirect the user back to this application at /auth/facebook/callback
-app.get('/auth/facebook',
-  passport.authenticate('facebook'),
-  function(req, res){
-    // The request will be redirected to Facebook for authentication, so this
-    // function will not be called.
-  });
-
-// GET /auth/facebook/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
-app.get('/auth/facebook/callback', 
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
-
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
-app.listen(8080);
-
-
-// Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
-}

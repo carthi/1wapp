@@ -1,0 +1,72 @@
+extends layout
+block body
+    script.
+      var students = !{JSON.stringify(studList)};
+      if(!students) return;
+      document.write("<div id='cbp-vm' class='cbp-vm-switcher cbp-vm-view-grid'>");
+      document.write("<div class='cbp-vm-options'>");
+      document.write("<a href='#' class='cbp-vm-icon cbp-vm-grid cbp-vm-selected' data-view='cbp-vm-view-grid'>Grid View</a>");
+      document.write("<a href='#' class='cbp-vm-icon cbp-vm-list' data-view='cbp-vm-view-list'>List View</a>");
+      document.write("</div>");
+      document.write("<ul>");
+      students.forEach(function(item) {
+            document.write("<li>");
+            document.write("<a class='cbp-vm-image' href='#'><img src='/img/fbmale.jpg'></a>");
+            document.write("<h3 class='cbp-vm-title'>" + item["displayName"] + "</h3>");
+            document.write("<a class='cbp-vm-icon cbp-vm-add' href='/profile/" + item["emailhash"] + "'>View Profile</a>");
+            document.write("</li>");
+      });
+      document.write("</ul>");
+      document.write("</div>");
+    script(src='/vendor/listgridview/classie.js')
+    link(href='/vendor/listgridview/cbpViewModeSwitch.css', rel='stylesheet', type='text/css')
+    script(src='/vendor/listgridview/cbpViewModeSwitch.js')   
+    //- ul
+    //-   li
+    //-     a.cbp-vm-image(href='#')
+    //-       img(src='/img/fbmale.jpg')
+    //-     h3.cbp-vm-title Silver beet
+    //-     .cbp-vm-details
+    //-       | Silver beet shallot wakame tomatillo salsify mung bean beetroot groundnut.
+    //-     a.cbp-vm-icon.cbp-vm-add(href='#') View Profile
+    //-   li
+    //-     a.cbp-vm-image(href='#')
+    //-       img(src='/img/fbmale.jpg')
+    //-     h3.cbp-vm-title Silver beet
+    //-     .cbp-vm-details
+    //-       | Silver beet shallot wakame tomatillo salsify mung bean beetroot groundnut.
+    //-     a.cbp-vm-icon.cbp-vm-add(href='#') View Profile
+    //-   li
+    //-     a.cbp-vm-image(href='#')
+    //-       img(src='/img/fbfemale.jpg')
+    //-     h3.cbp-vm-title Silver beet
+    //-     .cbp-vm-details
+    //-       | Silver beet shallot wakame tomatillo salsify mung bean beetroot groundnut.
+    //-     a.cbp-vm-icon.cbp-vm-add(href='#') View Profile
+    //-   li
+    //-     a.cbp-vm-image(href='#')
+    //-       img(src='/img/fbmale.jpg')
+    //-     h3.cbp-vm-title Silver beet
+    //-     .cbp-vm-details
+    //-       | Silver beet shallot wakame tomatillo salsify mung bean beetroot groundnut.
+    //-     a.cbp-vm-icon.cbp-vm-add(href='#') View Profile    
+  
+  //-link(href='/vendor/listgridview/jquery.hoverGrid.css', rel='stylesheet', type='text/css')
+  //-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  //-script(src='/vendor/listgridview/jquery.hoverGrid.js')      
+    //- #studlayout
+    //-   script.
+    //-       var students = !{JSON.stringify(studList)}
+    //-       students.forEach(function(item) {
+    //-         document.write("<div class='stud'>");
+    //-         document.write("<img width='200' height='200' src='http://cssdeck.com/uploads/media/items/1/1swi3Qy.png' alt='my image' title='my image'/>");
+    //-         document.write("<div class='caption' style='display: none;'>");
+    //-         document.write("<h2>Some Title</h2>");
+    //-         document.write("<p>");
+    //-         document.write("<a id='eid' href='/profile/" + item["emailhash"] + "'>");
+    //-         document.write(item["displayName"]);
+    //-         document.write("</a>");
+    //-         document.write("</p>");
+    //-         document.write("</div>");
+    //-         document.write("</div>");
+    //-       })

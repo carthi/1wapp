@@ -1,0 +1,19 @@
+extends layout
+block body
+  br
+  br
+  form(method="post", action="/login")
+    lable(for='email') Email
+    span.Apple-tab-span(style='white-space:pre;')   
+    input#email(type='text', name='email')
+    br
+    lable(for='password') Password
+    span.Apple-tab-span(style='white-space:pre;')   
+    input#password(type='password', name='password')
+    br
+    input(type="submit", value="Log In")
+  a(href="/auth/facebook") Log In With Facebook
+  br
+  a(href="/auth/google") Log In With Google
+  br
+  br

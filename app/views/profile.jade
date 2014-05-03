@@ -1,0 +1,30 @@
+extends layout
+
+block body
+
+    if profileinfo.firstName
+        h1 #{profileinfo.firstName}'s Profile
+    else
+        h1 #{profileinfo.email}'s Profile
+    a(href="/logout") Logout
+
+    .container
+      div
+        br
+        span Date of Birth: #{profile.dob}
+        br
+        span Address1: #{profile.address1}
+        br
+        span Address2:  #{profile.address2}
+        br
+        span City: #{profile.city}
+        br
+        span Phone: #{profile.phone}
+        br
+        span Degree: #{profile.education.degree}
+        br
+        span School: #{profile.education.school}
+        br
+        span Grades: #{profile.grades_honours}
+        br
+        span Interests: #{profile.interests_experience}
